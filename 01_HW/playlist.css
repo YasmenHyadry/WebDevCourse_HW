@@ -80,3 +80,25 @@ h1 {
   background-color: #eef3ff;
   transition: background-color 0.3s ease;
 }
+
+
+/* Styling for the title and the table header */
+.header-highlight {
+    background-color: #0033cc;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+
+
+.song-link {
+    color: #0033cc;   /* blue */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.song-link:hover {
+    color: red;       /* hover color */
+    text-decoration: underline;
+}

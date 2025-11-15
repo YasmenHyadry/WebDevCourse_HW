@@ -1,0 +1,52 @@
+/* עיצוב כללי לעמוד */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 40px;
+}
+
+/* כותרת */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* טבלת יצירת קשר */
+.contact-table {
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* תאים */
+.contact-table td {
+    padding: 10px;
+}
+
+/* שדות קלט */
+.contact-table input,
+.contact-table textarea {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+/* כפתור שליחה */
+button {
+    background-color: #0033cc;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #002699;
+}

@@ -1,0 +1,91 @@
+/* Page container */
+.page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+
+/* Dark Theme */
+
+body {
+    font-family: 'Courier New', monospace;
+    margin: 40px auto;
+    max-width: 980px;
+    background-color: #121212;
+    color: #e0e0e0;
+    padding: 0 30px;
+    line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+}
+
+nav {
+    background: #1b1b1b;
+    padding: 18px;
+    border-left: 4px solid #4db8ff;
+    border-radius: 8px;
+    margin: 25px 0;
+}
+
+a {
+    color: #4db8ff;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+th {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+td {
+    border: 1px solid #444;
+    padding: 8px;
+}
+
+pre {
+    background: #000;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+/* Forms */
+form fieldset {
+    background: #1b1b1b;
+    border: 1px solid #444;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+}
+
+form input, form select, form textarea {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border: 1px solid #444;
+    padding: 8px;
+    margin-bottom: 15px;
+}
+
+form button {
+    background-color: #4db8ff;
+    color: #121212;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+}
+
+form button:hover {
+    background-color: #3399ff;
+}

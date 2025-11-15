@@ -1,0 +1,139 @@
+/* Page container */
+.page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+
+/* Modern Theme - Clean, Professional */
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    margin: 40px auto;
+    max-width: 980px;
+    background-color: #f7f9fc;
+    color: #333;
+    line-height: 1.7;
+    padding: 0 30px;
+}
+
+/* Headings */
+h1 { 
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 10px;
+    margin-top: 40px;
+}
+
+h2 { 
+    color: #3498db;
+    margin-top: 35px;
+}
+
+h3 {
+    margin-top: 25px;
+    color: #2c3e50;
+}
+
+/* Navigation */
+nav {
+    background: #ffffff;
+    padding: 18px;
+    border-left: 4px solid #3498db;
+    border-radius: 8px;
+    margin: 25px 0;
+}
+
+nav a {
+    color: #3498db;
+}
+
+/* Paragraphs */
+p {
+    margin-bottom: 10px;
+}
+
+/* Lists */
+ul, ol {
+    margin-left: 25px;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/* Forms */
+form fieldset {
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    margin-bottom: 25px;
+}
+
+form input, form select, form textarea {
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    width: 250px;
+}
+
+form button {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+/* Code & Pre */
+pre, code {
+    background: #eef3fa;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+pre {
+    overflow-x: auto;
+}
+
+/* Images */
+figure {
+    text-align: center;
+    margin: 20px;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* Footer */
+footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
+    text-align: center;
+}

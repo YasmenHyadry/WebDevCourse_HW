@@ -1,4 +1,3 @@
-Name: Yasmen Haydry
+Name: Yasmen hayadry
 ID: 214078602
-Email: yasminhya@m.telhai.ac.il
-
+Email: yasminkhayadri@telhai.ac.il

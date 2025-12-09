@@ -5,23 +5,58 @@ let songs = [];
 let editMode = false;
 let editId = null;
 
-const form = document.getElementById('songForm');
-const list = document.getElementById('songList');
-const cardView = document.getElementById('cardView');
-const tableView = document.getElementById('tableView');
-const submitBtn = document.getElementById('submitBtn');
-const searchInput = document.getElementById('search');
-const toggleViewBtn = document.getElementById('toggleView');
-const playerFrame = document.getElementById('playerFrame');
-
-let viewMode = "table";
+//-------------------------------------------------------------
+// DOM
+//-------------------------------------------------------------
+const form = document.getElementById("songForm");
+const list = document.getElementById("songList");
+const searchInput = document.getElementById("search");
+const submitBtn = document.getElementById("submitBtn");
+const playerFrame = document.getElementById("playerFrame");
 
 //-------------------------------------------------------------
-// LOAD SONGS FROM STORAGE
+// LOAD FROM STORAGE
 //-------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-    songs = JSON.parse(localStorage.getItem('songs') || "[]");
+document.addEventListener("DOMContentLoaded", () => {
+    const stored = localStorage.getItem("songs");
+    songs = stored ? JSON.parse(stored) : [];
     renderSongs();
+});
+
+//-------------------------------------------------------------
+// ADD / UPDATE SONG
+//-------------------------------------------------------------
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById("title").value;
+    const url = document.getElementById("url").value;
+    const rating = Number(document.getElementById("rating").value);
+
+    const youtubeId = extractID(url);
+    const thumbnail = `https://img.youtube.com/vi/${youtubeId}/0.jpg`;
+
+    const songData = {
+        id: editMode ? editId : Date.now(),
+        title,
+        url,
+        youtubeId,
+        thumbnail,
+        rating,
+        dateAdded: Date.now()
+    };
+
+    if (editMode) {
+        songs = songs.map(s => s.id === editId ? songData : s);
+    } else {
+        songs.push(songData);
+    }
+
+    editMode = false;
+    submitBtn.innerText = "+ Add";
+
+    saveAndRender();
+    form.reset();
 });
 
 //-------------------------------------------------------------
@@ -34,53 +69,64 @@ function extractID(url) {
     if (url.includes("/shorts/"))
         return url.split("/shorts/")[1].split("?")[0];
 
-    const m = url.match(/v=([^&]+)/);
-    if (m) return m[1];
-
-    return url;
+    const match = url.match(/v=([^&]+)/);
+    return match ? match[1] : url;
 }
 
 //-------------------------------------------------------------
-// ADD / UPDATE SONG
+// RENDER TABLE
 //-------------------------------------------------------------
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
+function renderSongs() {
+    const searchTerm = searchInput.value.toLowerCase();
 
-    const title = document.getElementById('title').value;
-    const url = document.getElementById('url').value;
-    const rating = Number(document.getElementById('rating').value);
+    let filtered = songs.filter(s =>
+        s.title.toLowerCase().includes(searchTerm)
+    );
 
-    const youtubeId = extractID(url);
-    const thumbnail = `https://img.youtube.com/vi/${youtubeId}/0.jpg`;
+    const sortOption = document.querySelector('input[name="sortOption"]:checked').value;
 
-    const song = {
-        id: editMode ? editId : Date.now(),
-        title,
-        url,
-        youtubeId,
-        thumbnail,
-        rating,
-        dateAdded: Date.now()
-    };
+    if (sortOption === "name")
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
 
-    if (editMode) {
-        songs = songs.map(s => (s.id === editId ? song : s));
-    } else {
-        songs.push(song);
-    }
+    else if (sortOption === "rating")
+        filtered.sort((a, b) => b.rating - a.rating);
 
-    editMode = false;
-    editId = null;
+    else
+        filtered.sort((a, b) => b.dateAdded - a.dateAdded);
 
-    submitBtn.innerHTML = "+ Add";
-    submitBtn.classList.replace('btn-warning', 'btn-success');
+    list.innerHTML = "";
 
-    saveAndRender();
-    form.reset();
-});
+    filtered.forEach(song => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td><img src="${song.thumbnail}" class="thumbnail"></td>
+            <td>${song.title}</td>
+            <td>${song.rating}</td>
+
+            <td>
+                <a href="#" class="text-info fw-bold"
+                   onclick="openPlayer('${song.youtubeId}')">
+                   Watch
+                </a>
+            </td>
+
+            <td class="text-end">
+                <button class="btn btn-warning btn-sm" onclick="editSong(${song.id})">
+                    <i class="fa fa-edit"></i>
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteSong(${song.id})">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        `;
+
+        list.appendChild(row);
+    });
+}
 
 //-------------------------------------------------------------
-// SAVE + RENDER
+// SAVE + RERENDER
 //-------------------------------------------------------------
 function saveAndRender() {
     localStorage.setItem("songs", JSON.stringify(songs));
@@ -88,88 +134,19 @@ function saveAndRender() {
 }
 
 //-------------------------------------------------------------
-// RENDER SONGS
-//-------------------------------------------------------------
-function renderSongs() {
-
-    const searchTerm = searchInput.value.toLowerCase();
-    let filtered = songs.filter(s => s.title.toLowerCase().includes(searchTerm));
-
-    const sortOption = document.querySelector('input[name="sortOption"]:checked').value;
-
-    if (sortOption === "name")
-        filtered.sort((a, b) => a.title.localeCompare(b.title));
-    else if (sortOption === "rating")
-        filtered.sort((a, b) => b.rating - a.rating);
-    else
-        filtered.sort((a, b) => b.dateAdded - a.dateAdded);
-
-    list.innerHTML = "";
-    cardView.innerHTML = "";
-
-    filtered.forEach(song => {
-
-        // TABLE ROW
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="align-middle d-flex align-items-center gap-3">
-                <img src="${song.thumbnail}" class="thumbnail">
-                <span>${song.title}</span>
-            </td>
-
-            <td class="align-middle">${song.rating}</td>
-
-            <td class="align-middle">
-                <a href="#" onclick="openPlayer('${song.youtubeId}')" class="text-info fw-bold">Watch</a>
-            </td>
-
-            <td class="text-end align-middle">
-                <button class="btn btn-warning btn-sm me-2" onclick="editSong(${song.id})">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-danger btn-sm" onclick="deleteSong(${song.id})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        `;
-        list.appendChild(tr);
-
-        // CARD VIEW
-        const card = document.createElement("div");
-        card.innerHTML = `
-            <div class="card">
-                <img src="${song.thumbnail}">
-                <div class="card-body text-center">
-                    <h5>${song.title}</h5>
-                    <p>Rating: ${song.rating}/10</p>
-
-                    <button class="btn btn-primary w-100 mb-2" onclick="openPlayer('${song.youtubeId}')">▶ Play</button>
-                    <button class="btn btn-warning w-100 mb-2" onclick="editSong(${song.id})">✏ Edit</button>
-                    <button class="btn btn-danger w-100" onclick="deleteSong(${song.id})">🗑 Delete</button>
-                </div>
-            </div>
-        `;
-        cardView.appendChild(card);
-    });
-
-    toggleDisplay();
-}
-
-//-------------------------------------------------------------
 // EDIT SONG
 //-------------------------------------------------------------
 function editSong(id) {
-    const s = songs.find(x => x.id === id);
+    const song = songs.find(s => s.id === id);
 
-    document.getElementById('title').value = s.title;
-    document.getElementById('url').value = s.url;
-    document.getElementById('rating').value = s.rating;
+    document.getElementById("title").value = song.title;
+    document.getElementById("url").value = song.url;
+    document.getElementById("rating").value = song.rating;
 
     editMode = true;
     editId = id;
 
-    submitBtn.innerHTML = "Update";
-    submitBtn.classList.replace('btn-success', 'btn-warning');
+    submitBtn.innerText = "Update";
 }
 
 //-------------------------------------------------------------
@@ -177,39 +154,16 @@ function editSong(id) {
 //-------------------------------------------------------------
 function deleteSong(id) {
     if (!confirm("Delete this song?")) return;
+
     songs = songs.filter(s => s.id !== id);
     saveAndRender();
 }
 
 //-------------------------------------------------------------
-// OPEN PLAYER (MODAL)
+// OPEN VIDEO PLAYER
 //-------------------------------------------------------------
 function openPlayer(id) {
     playerFrame.src = `https://www.youtube.com/embed/${id}`;
-    new bootstrap.Modal(document.getElementById('videoModal')).show();
+    const modal = new bootstrap.Modal(document.getElementById("videoModal"));
+    modal.show();
 }
-
-//-------------------------------------------------------------
-// TOGGLE VIEW
-//-------------------------------------------------------------
-toggleViewBtn.addEventListener('click', () => {
-    viewMode = viewMode === "table" ? "cards" : "table";
-    toggleViewBtn.innerHTML =
-        viewMode === "table"
-            ? `<i class="fa-solid fa-table-cells-large"></i>`
-            : `<i class="fa-solid fa-list"></i>`;
-    renderSongs();
-});
-
-function toggleDisplay() {
-    tableView.style.display = viewMode === "table" ? "table" : "none";
-    cardView.style.display = viewMode === "cards" ? "grid" : "none";
-}
-
-//-------------------------------------------------------------
-// SEARCH + SORT
-//-------------------------------------------------------------
-searchInput.addEventListener('input', renderSongs);
-document.querySelectorAll('input[name="sortOption"]').forEach(radio =>
-    radio.addEventListener('change', renderSongs)
-);
